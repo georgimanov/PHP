@@ -1,0 +1,11 @@
+$inputStudents = "Pesho, pesho.g@gmail.com, onsite, 400
+Mariika, mariika@gmail.com, online, 350
+Geri, geri@gmail.com, online, 50
+Pesho, peshkata@gmail.com, onsite, 0
+Gosho & Kiro, gosho@gmail.com, onsite, 400
+Mincho, praznikov@vremeto.bg, online, 50";
+
+$sortBy = "id"; // "id", "username", "result"
+
+$order = "ascending"; // "ascending" or  "descending"
+
