@@ -8,7 +8,13 @@
 <!--                                    <p><img class="img-responsive" src="assets/img/blog01.jpg" alt=""></p>-->
                 <p><?php echo $post['content']; ?></p>
                 <br>
-                <p><bt>TAGS: <a href="#"><?php echo $category['name']; ?></a> - <a href="#"><?php echo $category['name']; ?></a></bt></p>
+                <p>
+                    <bt>TAGS:
+                        <?php foreach($tags as $tag): ?>
+                            <a href="<?php echo DX_URL . "posts/index?tag=" . strtolower($tag['name']);?>"><?php echo $tag['name']; ?></a>
+                        <?php endforeach; ?>
+                    </bt>
+                </p>
                 <hr>
                 <p><a href="<?php echo DX_URL . "posts/index";?>"># Back</a></p>
             </div>

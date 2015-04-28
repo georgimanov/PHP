@@ -72,7 +72,7 @@ class Master_Model {
 		
 		$this->db->query( $query );
 		
-		return $this->db->affected_rows;
+		return $this->db->insert_id;
 	}
 	
 	public function find( $args = array() ) {

@@ -5,7 +5,6 @@ namespace Controllers;
 class Master_Controller {
 	
 	protected $layout;
-	
 	protected $views_dir;
 	
 	public function __construct( $class_name = '\Controllers\Master_Controller', 
@@ -14,7 +13,7 @@ class Master_Controller {
 		
 		$this->views_dir = $views_dir;
 		$this->class_name = $class_name;
-		
+
 		include_once DX_ROOT_DIR . "models/{$model}.php";
 		$model_class = "\Models\\" . ucfirst( $model ) . "_Model";
 		
@@ -38,5 +37,4 @@ class Master_Controller {
 
         include_once $this->layout;
     }
-
 }

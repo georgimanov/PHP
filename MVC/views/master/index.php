@@ -1,10 +1,10 @@
 <div class="container">
-    <?php
-    if( ! empty( $this->logged_user ) ) {
-        echo "<div id='userbar'>Hello, {$this->logged_user['username']}!</div>";
-    }
-
-    ?>
+<!--    --><?php
+//    if( ! empty( $this->logged_user ) ) {
+//        echo "<div id='userbar'>Hello, {$this->logged_user['username']}!</div>";
+//    }
+//
+//    ?>
 </div>
 
 <!-- +++++ Welcome Section +++++ -->

@@ -38,22 +38,30 @@
 
                 </button>
                 <a class="navbar-brand" href="<?php echo DX_URL;?>">Georgi Manov's Blog</a>
+                <?php
+                if( ! empty( $this->logged_user ) ) {
+                    echo "<a href=". DX_URL . "user/profile/{$this->logged_user['id']} style='color: #ffff00'> Hello, {$this->logged_user['username']}</a><br />";
+                    printf("<a href='%s' style='color: #000' >Add Post</a>",DX_URL . "posts/add");
+                } ?>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="<?php echo DX_URL;?>">Home</a></li>
                     <li><a href="<?php echo DX_URL . "posts/index";?>">Blog</a></li>
                     <li><a href="<?php echo DX_URL . "master/contacts";?>">Contacts</a></li>
-                    <li><a href="<?php echo DX_URL . "login/index";?>">Login</a></li>
+
+                        <?php
+                        if( ! empty( $this->logged_user ) ) {
+                            echo "<li><a href=". DX_URL . "user/logout> Logout</a></li>";
+                        } else {
+                            echo "<li><a href=" . DX_URL . "user/login> Login</a></li>";
+                        }?>
+
+
                 </ul>
+
+
             </div><!--/.nav-collapse -->
         </div>
+
     </div>
-
-
-
-
-
-
-
-
