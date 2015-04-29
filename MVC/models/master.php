@@ -69,7 +69,7 @@ class Master_Model {
 		$values = implode( $values, ',' );
 		
 		$query = "INSERT INTO {$this->table}($keys) VALUES($values)";
-		
+
 		$this->db->query( $query );
 		
 		return $this->db->insert_id;

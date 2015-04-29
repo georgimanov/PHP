@@ -8,6 +8,18 @@ class Post_Model extends Master_Model {
         parent::__construct( array( 'table' => 'posts' ) );
     }
 
+    public function get_posts(){
+        $query = "SELECT p.id, p.title, p.content, p.date_pubslished, p.visits_count, u.id AS user_id, u.username
+                    FROM posts AS p
+                    LEFT JOIN users AS u
+                      ON p.user_id = u.id";
+
+        $result_set = $this->db->query( $query );
+        $results = $this->process_results( $result_set );
+
+        return $results;
+    }
+
     public function add_post ( $post, $tags ) {
         $keys = array_keys( $post );
         $values = array();
@@ -69,6 +81,8 @@ class Post_Model extends Master_Model {
         return $this->db->affected_rows;
     }
 
+
+    // TODO: Move to Master
     public function posts_count(){
 
         $query = "SELECT COUNT(*) as count FROM `posts`";
@@ -79,19 +93,16 @@ class Post_Model extends Master_Model {
         return $results;
     }
 
-    public function get_post_by_date (){
-        $query = "SELECT * FROM `posts` ORDER BY `date_pubslished` DESC";
-        $result_set = $this->db->query( $query );
-        $results = $this->process_results( $result_set );
-
-        return $results;
-    }
-
     public function get_posts_by_category( $category_name ) {
 
-        $query = "SELECT * FROM POSTS";
+        $query = " SELECT p.id, p.title, p.content, p.date_pubslished, p.visits_count, u.id AS user_id, u.username
+                        FROM POSTS as p";
+
         $query .= " LEFT JOIN categories
-                        ON posts.category_id=categories.id";
+                        ON p.category_id=categories.id
+                    LEFT JOIN users AS u
+                        ON p.user_id = u.id";
+
         if( ! empty( $category_name ) ) {
             $query .= " WHERE categories.name ='{$category_name}'";
         }
@@ -104,11 +115,16 @@ class Post_Model extends Master_Model {
 
     public function get_posts_by_tag( $tag_name ) {
 
-        $query = "SELECT * FROM POSTS";
-        $query .= "  LEFT JOIN posts_have_tags AS pt
-                        ON pt.post_id = posts.id
+        $query = " SELECT p.id, p.title, p.content, p.date_pubslished, p.visits_count, u.id AS user_id, u.username
+                        FROM POSTS as p";
+
+        $query .= " LEFT JOIN posts_have_tags AS pt
+                        ON pt.post_id = p.id
                     LEFT JOIN tags AS t
-                        ON t.id = pt.tag_id";
+                        ON t.id = pt.tag_id
+                    LEFT JOIN users AS u
+                        ON p.user_id = u.id";
+
         if( ! empty( $tag_name ) ) {
             $query .= " WHERE t.name ='{$tag_name}'";
         }
@@ -119,10 +135,48 @@ class Post_Model extends Master_Model {
         return $results;
     }
 
+    public function get_posts_by_date($year, $month){
+        $query = "SELECT p.id, p.title, p.content, p.date_pubslished, p.visits_count, u.id AS user_id, u.username
+                    FROM POSTS as p
+                  LEFT JOIN users AS u
+                      ON p.user_id = u.id
+                  WHERE
+                    year(p.date_pubslished)=". $year ."
+                      AND
+                    month(p.date_pubslished)=". $month ."
+                  ORDER BY YEAR(p.date_pubslished)
+                    DESC,
+                  MONTH(p.date_pubslished)
+                    DESC";
+
+        $result_set = $this->db->query( $query );
+        $results = $this->process_results( $result_set );
+
+        return $results;
+    }
+
+    public function get_dates_list(){
+        $query = "SELECT MONTH(a.date_pubslished) AS month, YEAR(a.date_pubslished) AS year
+                    FROM `posts` AS a
+                  LEFT JOIN `posts` AS p
+                      ON a.id = p.id
+                  GROUP BY(month)
+                  ORDER BY YEAR(a.date_pubslished) DESC,
+                  MONTH(a.date_pubslished) DESC";
+
+        $result_set = $this->db->query( $query );
+        $results = $this->process_results( $result_set );
+
+        return $results;
+    }
+
     public function get_tags_by_post_id ( $id ){
 
         $query = "SELECT name FROM tags";
-        $query .= " left join posts_have_tags as pt on pt.tag_id = tags.id left join posts as p on p.id = pt.post_id";
+        $query .= " LEFT JOIN posts_have_tags AS pt
+                        ON pt.tag_id = tags.id
+                    LEFT join posts AS p
+                        ON p.id = pt.post_id";
         if( ! empty( $id ) ) {
             $query .= " WHERE p.id ='{$id}'";
         }

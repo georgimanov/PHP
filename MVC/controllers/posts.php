@@ -21,21 +21,26 @@ class Posts_Controller extends Master_Controller {
         } elseif ( !empty ( $_GET["tag"] ) ){
             $tag_name = $_GET["tag"];
             $posts = $this->model->get_posts_by_tag($tag_name);
-        }else {
-            $posts = $this->model->get_post_by_date();
+        }elseif ( !empty ( $_GET["year"] ) && !empty ( $_GET["month"] ) ) {
+            $month = $_GET["month"];
+            $year = $_GET["year"];
+            $posts = $this->model->get_posts_by_date($year, $month);
+
+        } else {
+            $posts = $this->model->get_posts();
         }
 
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'index.php';
         if( empty( $posts) ){
-            header( 'Location: ' . DX_URL);
+            header( 'Location: ' . DX_URL . "posts/sorry");
             exit;
         }
 
-        $post = $posts[0];
-        $user = $this->model->get_user( $post['user_id'] );
         $all_categories = $this->model->posts_count()[0];
         $categories_list = $this->model->get_categories_count();
         $tags_list = $this->list_all_tags();
+        $dates_list = $this->model->get_dates_list();
+
+        $template_name = DX_ROOT_DIR . $this->views_dir . 'index.php';
         include_once $this->layout;
     }
 
@@ -74,6 +79,12 @@ class Posts_Controller extends Master_Controller {
         $categories_list = $this->model->get_categories_count();
 
         $template_name = DX_ROOT_DIR . $this->views_dir . 'add.php';
+
+        include_once $this->layout;
+    }
+
+    public function sorry(){
+        $template_name = DX_ROOT_DIR . $this->views_dir . 'sorry.php';
 
         include_once $this->layout;
     }

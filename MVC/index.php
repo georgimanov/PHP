@@ -50,7 +50,7 @@ if ( ! empty( $request ) ) {
 $admin_namespace = $admin_routing ? '\Admin' : '';
 $controller_class = $admin_namespace . '\Controllers\\' . ucfirst( $controller ) . '_Controller';
 
-				// \Controllers\Artist_Controller
+// \Controllers\Artist_Controller
 $instance = new $controller_class();
 if(strpos($method, "?") >= 0){
     $method = explode("?", $method)[0];
@@ -58,6 +58,9 @@ if(strpos($method, "?") >= 0){
 
 if( method_exists( $instance, $method ) ) {
 	call_user_func_array( array( $instance, $method ), array( $param ) );
+} else{
+    header('Location: '. DX_URL_ERROR);
+    exit;
 }
 
 $db_object = \Lib\Database::get_instance();

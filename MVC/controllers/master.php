@@ -32,8 +32,8 @@ class Master_Controller {
 		include_once $this->layout;
 	}
 
-    public function contacts() {
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'contacts.php';
+    public function error() {
+        $template_name = DX_ROOT_DIR . $this->views_dir . 'error.php';
 
         include_once $this->layout;
     }

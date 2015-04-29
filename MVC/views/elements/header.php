@@ -48,7 +48,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="<?php echo DX_URL;?>">Home</a></li>
                     <li><a href="<?php echo DX_URL . "posts/index";?>">Blog</a></li>
-                    <li><a href="<?php echo DX_URL . "master/contacts";?>">Contacts</a></li>
+                    <li><a href="<?php echo DX_URL . "contacts/index";?>">Contacts</a></li>
 
                         <?php
                         if( ! empty( $this->logged_user ) ) {
@@ -57,11 +57,9 @@
                             echo "<li><a href=" . DX_URL . "user/login> Login</a></li>";
                         }?>
 
-
                 </ul>
-
-
             </div><!--/.nav-collapse -->
+
         </div>
 
     </div>
