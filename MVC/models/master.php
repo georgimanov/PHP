@@ -81,6 +81,8 @@ class Master_Model {
 				'limit' => $this->limit,
 				'where' => '',
 				'columns' => '*',
+                'order' => '',
+                'desc' => 'ASC'
 		);
 		
 		$args = array_merge( $defaults, $args );
@@ -92,12 +94,12 @@ class Master_Model {
 		if( ! empty( $where ) ) {
 			$query .= " WHERE $where";
 		}
-		
+
 		if( ! empty( $limit ) ) {
 			$query .= " LIMIT $limit";
 		}
-		
-		$result_set = $this->db->query( $query );
+
+        $result_set = $this->db->query( $query );
 		
 		$results = $this->process_results( $result_set );
 		

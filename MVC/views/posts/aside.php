@@ -1,6 +1,7 @@
+<details>
+    <summary class="text-center">Filters show/hide</summary>
 
-<aside >
-<div class="container">
+<aside class="container">
     <div class="col-md-3">
         <div class="categories text-left">
             <h4>Categories:
@@ -48,20 +49,26 @@
 
     <div class="col-md-3">
         <div class="categories text-left">
-            <h4>Dates:
+            <h4>Posts by dates:
                 <ul>
                     <li>
                         <a href="<?php echo DX_URL . "posts/index";?>">All</a>
                     </li>
-
-                    <?php foreach( $dates_list as $date ): ?>
-                        <li >
-                            <a href="<?php echo DX_URL . "posts/index?year=" . $date['year'] . "&month=" . $date['month'] ;?>">
-                        <span>
-                            <?php echo $date['year'] . "-" .$date['month'];?>
-                        </span>
+                    <?php foreach( $dates_list as $item ): ?>
+                        <li>
+                            <a href="<?php echo DX_URL . "posts/index?year=" . $item['date']['year'] . "&month=" . $item['date']['month'] ;?>">
+                                <?php echo  $item['date']['year'] . '-' .$item['date']['month'] ; ?>
                             </a>
                         </li>
+                        <ul>
+                            <?php foreach( $item['posts'] as $post ): ?>
+                                <li>
+                                    <a href="<?php echo DX_URL . "posts/view/" . $post['id'];?>">
+                                        <?php echo $post['title']; ?>
+                                    </a>
+                                </li>
+                            <?php endforeach;?>
+                        </ul>
                     <?php endforeach;?>
                 </ul>
             </h4>
@@ -69,16 +76,15 @@
     </div>
 
     <div class="col-md-3">
-        <div class="well">
+        <div class="well centered">
             <h4>Search by tag</h4>
-            <div class="input-group">
                 <form role="form" method="get">
-                    <input name="tag" class="form-control">
-                    <input type="submit">
+                        <input name="tag" type="text" class="form-control" id="usr">
+                        <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
             <!-- /.input-group -->
         </div>
     </div>
-</div>
 </aside>
+</details>

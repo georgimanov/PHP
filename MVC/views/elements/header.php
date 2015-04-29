@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+    <link rel="shortcut icon" href="<?php echo DX_URL ; ?>views/img/favicon.png">
 
     <title>Manov</title>
 
@@ -19,7 +19,8 @@
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="<?php echo DX_URL;?>/views/assets/js/hover.zoom.js"></script>
-    <script src="views/assets/js/hover.zoom.conf.js"></script>
+    <script src="<?php echo DX_URL;?>/views/assets/js/hover.zoom.conf.js"></script>
+    <script src="<?php echo DX_URL;?>/ckeditor/ckeditor.js"></script>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -41,7 +42,10 @@
                 <?php
                 if( ! empty( $this->logged_user ) ) {
                     echo "<a href=". DX_URL . "user/profile/{$this->logged_user['id']} style='color: #ffff00'> Hello, {$this->logged_user['username']}</a><br />";
-                    printf("<a href='%s' style='color: #000' >Add Post</a>",DX_URL . "posts/add");
+                    printf("<a href='%s' style='color: #000' >Post: </a>",DX_URL . "#");
+                    printf("<a href='%s' style='color: #000' >Add </a>",DX_URL . "posts/add");
+                    printf("<a href='%s' style='color: #000' >Edit </a>",DX_URL . "posts/edit");
+                    printf("<a href='%s' style='color: #000' >Delete </a>",DX_URL . "posts/delete");
                 } ?>
             </div>
             <div class="navbar-collapse collapse">

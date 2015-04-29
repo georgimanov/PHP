@@ -31,7 +31,7 @@ class Contacts_Controller extends Master_Controller {
             $new_contact_entry_id = $this->model->add( $contact );
         }
 
-        $redirect = 'index.php';
+        $redirect = (__FUNCTION__). '.php';
         if( $new_contact_entry_id > 0 ){
             $redirect ='thanks.php';
         }

@@ -10,10 +10,10 @@ if($user['username'] === 'georgi'){
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-                <p><img src="<?php echo DX_URL;?>/views/assets/img/<?php echo $picture;?>" alt="Georgi Manov" width="50px" height="50px"> <ba><?php echo $user['username']; ?></ba></p>
-                <p><bd><?php echo $post['date_pubslished']; ?></bd></p>
+                <p><img src="<?php echo DX_URL;?>/views/assets/img/<?php echo $picture;?>" alt="Profile pictyre" width="50px" height="50px"> <ba><?php echo $user['username']; ?></ba></p>
+                <p><bd><?php echo date("d-F-Y",strtotime($post['date_pubslished'])); ?></bd></p>
                 <h4><?php echo $post['title']; ?></h4>
-<!--                                    <p><img class="img-responsive" src="assets/img/blog01.jpg" alt=""></p>-->
+                <!--                                    <p><img class="img-responsive" src="assets/img/blog01.jpg" alt=""></p>-->
                 <p><?php echo $post['content']; ?></p>
                 <br>
                 <p>
@@ -31,4 +31,21 @@ if($user['username'] === 'georgi'){
     </div> <!-- /container -->
 </div><!-- /white -->
 
-<?php include_once "comments.php" ?>
+<div id="grey">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <?php foreach($comments as $comment): ?>
+                    <p><img src="<?php echo DX_URL;?>/views/assets/img/<?php echo $picture;?>" alt="Profile pictyre" width="50px" height="50px"> <ba><?php echo $comment['name']; ?></ba></p>
+                    <p><?php echo $comment['content']; ?></p>
+                    <p>Date: <bd><?php echo date("d-F-Y",strtotime($comment['date_published'])); ?></bd>
+                        <?php printf("Email: <a href='#' >%s</a>" , $comment['email'] == "" ? "none" : $comment['email']); ?>
+                    </p>
+                    <hr>
+                <?php endforeach; ?>
+            </div>
+
+        </div>
+    </div>
+</div>
+<?php include_once "comment.php" ?>

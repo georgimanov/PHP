@@ -13,8 +13,7 @@ class Posts_Controller extends Master_Controller {
 
     }
 
-    public function index()
-    {
+    public function index() {
         if ( !empty ( $_GET["category"] ) ) {
             $category_name = $_GET["category"];
             $posts = $this->model->get_posts_by_category($category_name);
@@ -37,15 +36,14 @@ class Posts_Controller extends Master_Controller {
 
         $all_categories = $this->model->posts_count()[0];
         $categories_list = $this->model->get_categories_count();
-        $tags_list = $this->list_all_tags();
-        $dates_list = $this->model->get_dates_list();
+        $tags_list = $this->model->list_all_tags();
+        $dates_list = $this->model->get_posts_by_dates();
 
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'index.php';
+        $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';
         include_once $this->layout;
     }
 
-    public function add( )
-    {
+    public function add( ) {
         $auth = \Lib\Auth::get_instance();
         if(! $auth->is_logged_in() ){
             header("Location: ". DX_URL. "posts/index");
@@ -78,25 +76,23 @@ class Posts_Controller extends Master_Controller {
 
         $categories_list = $this->model->get_categories_count();
 
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'add.php';
+        $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';
 
         include_once $this->layout;
     }
 
     public function sorry(){
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'sorry.php';
+        $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';
 
         include_once $this->layout;
     }
 
-    public function view( $id )
-    {
+    public function view( $id ) {
         $posts = $this->model->get($id);
         if( empty( $posts) ){
             header( 'Location: ' . DX_URL);
             exit;
         }
-
 
         $post = $posts[0];
 
@@ -104,17 +100,10 @@ class Posts_Controller extends Master_Controller {
 
         $tags = $this->model->get_tags_by_post_id($id);
         $user = $this->model->get_user( $post['user_id'] );
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'view.php';
+        $comments = $this->model->get_comments( $id );
+
+        $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';
 
         include_once $this->layout;
-    }
-
-
-
-    private function list_all_tags(){
-        $category_model = new \Models\Tag_Model();
-        $categories = $category_model->find();
-
-        return $categories;
     }
 }

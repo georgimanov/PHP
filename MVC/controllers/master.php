@@ -27,13 +27,13 @@ class Master_Controller {
 	}
 	
 	public function index() {
-		$template_name = DX_ROOT_DIR . $this->views_dir . 'index.php';
+		$template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';;
 		
 		include_once $this->layout;
 	}
 
     public function error() {
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'error.php';
+        $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';
 
         include_once $this->layout;
     }

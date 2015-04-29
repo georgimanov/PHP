@@ -56,9 +56,24 @@ if(strpos($method, "?") >= 0){
     $method = explode("?", $method)[0];
 }
 
+$controllers = array(
+    'comments',
+    'contacts',
+    'master',
+    'posts',
+    'user'
+);
+
+
 if( method_exists( $instance, $method ) ) {
 	call_user_func_array( array( $instance, $method ), array( $param ) );
-} else{
+}
+elseif ( in_array( $instance, $controllers ) ) {
+    call_user_func_array( array( 'master', 'index' ), array( $param ) );
+}
+elseif ( method_exists( $instance, 'index') ) {
+    call_user_func_array( array( $instance, 'index' ), array( $param ) );
+} else {
     header('Location: '. DX_URL_ERROR);
     exit;
 }

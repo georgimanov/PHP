@@ -12,7 +12,9 @@ class Post_Model extends Master_Model {
         $query = "SELECT p.id, p.title, p.content, p.date_pubslished, p.visits_count, u.id AS user_id, u.username
                     FROM posts AS p
                     LEFT JOIN users AS u
-                      ON p.user_id = u.id";
+                      ON p.user_id = u.id
+                    ORDER BY p.date_pubslished
+                      DESC";
 
         $result_set = $this->db->query( $query );
         $results = $this->process_results( $result_set );
@@ -107,6 +109,9 @@ class Post_Model extends Master_Model {
             $query .= " WHERE categories.name ='{$category_name}'";
         }
 
+        $query .= " ORDER BY p.date_pubslished
+                      DESC";
+
         $result_set = $this->db->query( $query );
         $results = $this->process_results( $result_set );
 
@@ -129,6 +134,9 @@ class Post_Model extends Master_Model {
             $query .= " WHERE t.name ='{$tag_name}'";
         }
 
+        $query .= " ORDER BY p.date_pubslished
+                      DESC";
+
         $result_set = $this->db->query( $query );
         $results = $this->process_results( $result_set );
 
@@ -144,10 +152,8 @@ class Post_Model extends Master_Model {
                     year(p.date_pubslished)=". $year ."
                       AND
                     month(p.date_pubslished)=". $month ."
-                  ORDER BY YEAR(p.date_pubslished)
-                    DESC,
-                  MONTH(p.date_pubslished)
-                    DESC";
+                  ORDER BY p.date_pubslished
+                      DESC";
 
         $result_set = $this->db->query( $query );
         $results = $this->process_results( $result_set );
@@ -168,6 +174,38 @@ class Post_Model extends Master_Model {
         $results = $this->process_results( $result_set );
 
         return $results;
+    }
+
+    public function get_posts_by_dates()  {
+        $dates = $this->get_dates_list();
+        $posts = $this->get_posts();
+        $result = array();
+
+        foreach ($dates as $date) {
+            $current_post = array();
+            foreach($posts as $post) {
+                if ($date['month'] == date("m",strtotime($post['date_pubslished']))
+                    && $date['year'] == date("Y",strtotime($post['date_pubslished']) ) ) {
+                    array_push($current_post, [
+                        'id' => $post['id'],
+                        'title' => $post['title']
+                    ]);
+                }
+            }
+            array_push($result,[
+                'date' => $date,
+                'posts' => $current_post
+            ]);
+        }
+
+        return $result;
+    }
+
+    public function list_all_tags(){
+        $category_model = new \Models\Tag_Model();
+        $categories = $category_model->find();
+
+        return $categories;
     }
 
     public function get_tags_by_post_id ( $id ){
@@ -209,5 +247,15 @@ class Post_Model extends Master_Model {
         $user = $users[0];
 
         return $user;
+    }
+
+    public function get_comments($id){
+        include  DX_ROOT_DIR . '/models/comment.php';
+        $comment_model = new \Models\Comment_Model();
+        $comments = $comment_model->find( array(
+            'where' => "post_id = $id"
+        ) );
+
+        return $comments;
     }
 }

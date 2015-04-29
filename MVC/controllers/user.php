@@ -22,7 +22,7 @@ class User_Controller extends Master_Controller {
                 exit;
             }
         } else {
-            $template_name = DX_ROOT_DIR . $this->views_dir . 'login.php';
+            $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';
 
             include_once $this->layout;
         }
@@ -30,7 +30,7 @@ class User_Controller extends Master_Controller {
 
     public function register() {
 
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'register.php';
+        $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';
 
         include_once $this->layout;
     }
@@ -45,7 +45,7 @@ class User_Controller extends Master_Controller {
         }
         $user = $user[0];
 
-        $template_name = DX_ROOT_DIR . $this->views_dir . 'profile.php';
+        $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';
 
         include_once $this->layout;
     }
@@ -55,6 +55,5 @@ class User_Controller extends Master_Controller {
 
         header("Location: ". DX_URL);
         exit;
-
     }
 }
