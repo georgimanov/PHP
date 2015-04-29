@@ -9,7 +9,6 @@ class Posts_Controller extends Master_Controller {
             'post', '/views/posts/' );
 
         include  DX_ROOT_DIR . '/models/category.php';
-        include  DX_ROOT_DIR . '/models/user.php';
         include  DX_ROOT_DIR . '/models/tag.php';
 
     }
@@ -33,9 +32,9 @@ class Posts_Controller extends Master_Controller {
         }
 
         $post = $posts[0];
-        $user = $this->get_user( $post['user_id'] );
-        $category = $this->get_category( $post['category_id'] );
-        $categories_list = $this->list_all_categories();
+        $user = $this->model->get_user( $post['user_id'] );
+        $all_categories = $this->model->posts_count()[0];
+        $categories_list = $this->model->get_categories_count();
         $tags_list = $this->list_all_tags();
         include_once $this->layout;
     }
@@ -72,7 +71,7 @@ class Posts_Controller extends Master_Controller {
             exit;
         }
 
-        $categories_list = $this->list_all_categories();
+        $categories_list = $this->model->get_categories_count();
 
         $template_name = DX_ROOT_DIR . $this->views_dir . 'add.php';
 
@@ -87,37 +86,19 @@ class Posts_Controller extends Master_Controller {
             exit;
         }
 
+
         $post = $posts[0];
+
+        $this->model->update_visits($post);
+
         $tags = $this->model->get_tags_by_post_id($id);
-        $user = $this->get_user( $post['user_id'] );
-        $category = $this->get_category( $post['category_id'] );
+        $user = $this->model->get_user( $post['user_id'] );
         $template_name = DX_ROOT_DIR . $this->views_dir . 'view.php';
 
         include_once $this->layout;
     }
 
-    private function get_user($id){
-        $user_model = new \Models\User_Model();
-        $users = $user_model->get( $id );
-        $user = $users[0];
 
-        return $user;
-    }
-
-    private function get_category($id){
-        $category_model = new \Models\Category_Model();
-        $categories = $category_model->get( $id );
-        $category = $categories[0];
-
-        return $category;
-    }
-
-    private function list_all_categories(){
-        $category_model = new \Models\Category_Model();
-        $categories = $category_model->find();
-
-        return $categories;
-    }
 
     private function list_all_tags(){
         $category_model = new \Models\Tag_Model();

@@ -57,6 +57,28 @@ class Post_Model extends Master_Model {
         return $this->db->affected_rows;
     }
 
+    public function update_visits($post){
+
+        $visits = $post['visits_count'] + 1;
+
+        $query = "UPDATE {$this->table}
+                    SET visits_count = {$visits} WHERE id = {$post['id']}";
+
+        $this->db->query( $query );
+
+        return $this->db->affected_rows;
+    }
+
+    public function posts_count(){
+
+        $query = "SELECT COUNT(*) as count FROM `posts`";
+
+        $result_set = $this->db->query( $query );
+        $results = $this->process_results( $result_set );
+
+        return $results;
+    }
+
     public function get_post_by_date (){
         $query = "SELECT * FROM `posts` ORDER BY `date_pubslished` DESC";
         $result_set = $this->db->query( $query );
@@ -68,7 +90,8 @@ class Post_Model extends Master_Model {
     public function get_posts_by_category( $category_name ) {
 
         $query = "SELECT * FROM POSTS";
-        $query .= " LEFT JOIN categories ON posts.category_id=categories.id";
+        $query .= " LEFT JOIN categories
+                        ON posts.category_id=categories.id";
         if( ! empty( $category_name ) ) {
             $query .= " WHERE categories.name ='{$category_name}'";
         }
@@ -82,7 +105,10 @@ class Post_Model extends Master_Model {
     public function get_posts_by_tag( $tag_name ) {
 
         $query = "SELECT * FROM POSTS";
-        $query .= "  LEFT JOIN posts_have_tags AS pt ON pt.post_id = posts.id LEFT JOIN tags AS t ON t.id = pt.tag_id";
+        $query .= "  LEFT JOIN posts_have_tags AS pt
+                        ON pt.post_id = posts.id
+                    LEFT JOIN tags AS t
+                        ON t.id = pt.tag_id";
         if( ! empty( $tag_name ) ) {
             $query .= " WHERE t.name ='{$tag_name}'";
         }
@@ -105,5 +131,29 @@ class Post_Model extends Master_Model {
         $results = $this->process_results( $result_set );
 
         return $results;
+    }
+
+    public function get_categories_count(){
+
+        $query = "SELECT c.id as id, c.name as name, count(p.category_id) as count
+                    FROM `categories` as c
+                  LEFT JOIN posts as p
+                    ON c.id = p.category_id
+                  GROUP BY (p.category_id)
+                  ORDER BY count(p.category_id) DESC";
+
+        $result_set = $this->db->query( $query );
+        $results = $this->process_results( $result_set );
+
+        return $results;
+    }
+
+    public function get_user($id){
+        include  DX_ROOT_DIR . '/models/user.php';
+        $user_model = new \Models\User_Model();
+        $users = $user_model->get( $id );
+        $user = $users[0];
+
+        return $user;
     }
 }

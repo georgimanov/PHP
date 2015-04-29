@@ -1,11 +1,15 @@
-
 <div class="categories text-center">
     <h4>Categories:
-        <a href="<?php echo DX_URL . "posts/index";?>">All</a>
+
+        <a href="<?php echo DX_URL . "posts/index";?>">All
+            <span class="badge"><?php echo $all_categories['count']; ?> </span>
+        </a>
+
         <?php foreach( $categories_list as $category ): ?>
             <a href="<?php echo DX_URL . "posts/index?category=" . strtolower($category['name']);?>">
-                <span>
-                    <?php echo $category['name'];?>
+                <?php echo $category['name'];?>
+                <span class="badge">
+                    <?php echo $category['count'];?>
                 </span>
             </a>
         <?php endforeach;?>
@@ -42,7 +46,11 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
                 <p><img src="<?php echo DX_URL;?>/views/assets/img/user.png" alt="Georgi Manov" width="50px" height="50px"> <ba><?php echo $user['username']; ?></ba></p>
-                <p><bd>Posted on: <?php echo $post['date_pubslished']; ?></bd></p>
+                <p>
+                    <bd>Posted on: <?php echo $post['date_pubslished']; ?>, </bd>
+                    <bd>Visits count: <?php echo $post['visits_count']; ?></bd>
+
+                </p>
                 <h4><?php echo $post['title']; ?></h4>
                 <p><?php echo $post['content']; ?></p>
                 <p><a href="<?php echo DX_URL . "posts/view/" . $post['id']; ?>">Continue Reading...</a></p>
