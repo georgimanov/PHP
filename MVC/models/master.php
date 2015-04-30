@@ -50,8 +50,6 @@ class Master_Model {
 		
 		$query .= " WHERE id = {$element['id']}";
 		
-		var_dump($query);
-		
 		$this->db->query( $query );
 		
 		return $this->db->affected_rows;
@@ -70,41 +68,39 @@ class Master_Model {
 		
 		$query = "INSERT INTO {$this->table}($keys) VALUES($values)";
 
-		$this->db->query( $query );
+        $this->db->query( $query );
 		
 		return $this->db->insert_id;
 	}
-	
-	public function find( $args = array() ) {
-		$defaults = array(
-				'table' => $this->table,
-				'limit' => $this->limit,
-				'where' => '',
-				'columns' => '*',
-                'order' => '',
-                'desc' => 'ASC'
-		);
-		
-		$args = array_merge( $defaults, $args );
-		
-		extract( $args );
-		
-		$query = "SELECT {$columns} FROM {$table}";
-		
-		if( ! empty( $where ) ) {
-			$query .= " WHERE $where";
-		}
 
-		if( ! empty( $limit ) ) {
-			$query .= " LIMIT $limit";
-		}
+    public function find( $args = array() ) {
+        $defaults = array(
+            'table' => $this->table,
+            'limit' => $this->limit,
+            'where' => '',
+            'columns' => '*',
+        );
+
+        $args = array_merge( $defaults, $args );
+
+        extract( $args );
+
+        $query = "SELECT {$columns} FROM {$table}";
+
+        if( ! empty( $where ) ) {
+            $query .= " WHERE $where";
+        }
+
+        if( ! empty( $limit ) ) {
+            $query .= " LIMIT $limit";
+        }
 
         $result_set = $this->db->query( $query );
-		
-		$results = $this->process_results( $result_set );
-		
-		return $results;
-	}
+
+        $results = $this->process_results( $result_set );
+
+        return $results;
+    }
 
     public function distinct( $args = array() ) {
         $defaults = array(
@@ -141,7 +137,7 @@ class Master_Model {
 		
 		return $results;
 	}
-	
+
 	
 	
 	

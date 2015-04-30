@@ -12,8 +12,18 @@ class Poststags_Model extends Master_Model {
 
         $query = "INSERT INTO {$this->table}(post_id, tag_id) VALUES($post_id, $tag_id)";
 
+
         $this->db->query( $query );
 
        return $this->db->affected_rows;
+    }
+
+    public function delete_relation($post_id){
+        $query = "DELETE FROM {$this->table}
+                    WHERE post_id=$post_id";
+
+        $this->db->query( $query );
+
+        return $this->db->affected_rows;
     }
 }

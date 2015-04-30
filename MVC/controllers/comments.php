@@ -24,7 +24,6 @@ class Comments_Controller extends Master_Controller {
 
     public function add()
     {
-
         if( ! empty( $_POST['name'] ) && ! empty( $_POST['content'] ) && ! empty ( $_POST['post_id'] ) ) {
             $name = $_POST['name'];
             $content = $_POST['content'];

@@ -22,53 +22,51 @@ class Post_Model extends Master_Model {
         return $results;
     }
 
-    public function add_post ( $post, $tags ) {
-        $keys = array_keys( $post );
-        $values = array();
+    //TODO: Add validation of input data
+    public function add_post ( $post, $tags_string ) {
 
-        foreach( $post as $key => $value ) {
-            $values[] = "'" . $this->db->real_escape_string($value) . "'";
-        }
+        $added_post_id = $this->add($post);
 
-        $keys = implode( $keys, ',' );
-        $values = implode( $values, ',' );
+        if ( count($tags_string) > null ){
+            $tags_names = explode(',', $tags_string);
 
-        $query = "INSERT INTO {$this->table}($keys) VALUES($values)";
-
-        $this->db->query( $query );
-
-        $new_post_id = $this->db->insert_id;
+            $tag_model = new \Models\Tag_Model();
+            $posts_have_tag_model = new \Models\Poststags_Model();
 
 
-        if ( count($tags) > null ){
-            $tags_list = explode(',', $tags);
+            foreach($tags_names as $tag_name){
 
-            $category_tag_model = new \Models\Tag_Model();
+                $tag_name = trim($tag_name);
 
-            include  DX_ROOT_DIR . '/models/poststags.php';
-            $category_posts_tag_model = new \Models\Poststags_Model();
+                if( ! empty ($tag_name) ){
 
+                    $tag_exists = $tag_model->get_by_name ( $tag_name );
 
-            foreach($tags_list as $tag){
+                    $tag_id = 0;
+                    if( empty ($tag_exists) ) {
+                        $tag_element = array(
+                            'name' => $tag_name
+                        );
 
-                $tag_element = array(
-                    'name' => $tag,
-                );
+                        $tag_id = $tag_model->add($tag_element);
+                    } else {
+                        $tag_id = $tag_exists[0]['id'];
+                    }
 
-                $tag_id_result = $category_tag_model->add($tag_element);
-
-                if($tag_id_result !== -1){
-                    $count_added_tags = $category_posts_tag_model->add_relation($new_post_id, $tag_id_result);
-                } else {
-                    $new_tag_id = $category_tag_model->find(array(
-                        'where' => "name = {'$tag'}"
-                    ));
-                    $count_added_tags = $category_posts_tag_model->add_relation($new_post_id, $new_tag_id);
+                    $posts_have_tag_model->add_relation($added_post_id, $tag_id);
                 }
             }
         }
 
         return $this->db->affected_rows;
+    }
+
+    public function delete ( $id ) {
+        $tags = $this->get_tags_by_post_id( $id );
+
+        if( count($tags) > 0 ) {
+
+        }
     }
 
     public function update_visits($post){
@@ -161,6 +159,8 @@ class Post_Model extends Master_Model {
         return $results;
     }
 
+    // DATES
+    // FILTER
     public function get_dates_list(){
         $query = "SELECT MONTH(a.date_pubslished) AS month, YEAR(a.date_pubslished) AS year
                     FROM `posts` AS a
@@ -197,51 +197,11 @@ class Post_Model extends Master_Model {
                 'posts' => $current_post
             ]);
         }
-
         return $result;
     }
 
-    public function list_all_tags(){
-        $category_model = new \Models\Tag_Model();
-        $categories = $category_model->find();
-
-        return $categories;
-    }
-
-    public function get_tags_by_post_id ( $id ){
-
-        $query = "SELECT name FROM tags";
-        $query .= " LEFT JOIN posts_have_tags AS pt
-                        ON pt.tag_id = tags.id
-                    LEFT join posts AS p
-                        ON p.id = pt.post_id";
-        if( ! empty( $id ) ) {
-            $query .= " WHERE p.id ='{$id}'";
-        }
-
-        $result_set = $this->db->query( $query );
-        $results = $this->process_results( $result_set );
-
-        return $results;
-    }
-
-    public function get_categories_count(){
-
-        $query = "SELECT c.id as id, c.name as name, count(p.category_id) as count
-                    FROM `categories` as c
-                  LEFT JOIN posts as p
-                    ON c.id = p.category_id
-                  GROUP BY (p.category_id)
-                  ORDER BY count(p.category_id) DESC";
-
-        $result_set = $this->db->query( $query );
-        $results = $this->process_results( $result_set );
-
-        return $results;
-    }
-
+    // USERS
     public function get_user($id){
-        include  DX_ROOT_DIR . '/models/user.php';
         $user_model = new \Models\User_Model();
         $users = $user_model->get( $id );
         $user = $users[0];
@@ -249,13 +209,45 @@ class Post_Model extends Master_Model {
         return $user;
     }
 
+    // CATEGORIES
+    // FILTER
+    public function get_categories_count(){
+        $category_model = new \Models\Category_Model();
+        $categories = $category_model->get_categories_with_posts_count( );
+
+        return $categories;
+    }
+
+    // COMMENTS
     public function get_comments($id){
-        include  DX_ROOT_DIR . '/models/comment.php';
         $comment_model = new \Models\Comment_Model();
         $comments = $comment_model->find( array(
             'where' => "post_id = $id"
         ) );
 
         return $comments;
+    }
+
+    // TAGS
+    // FILTER
+    public function get_top_tags_with_count( $limit  ){
+        $tag_model = new \Models\Tag_Model();
+        $tags = $tag_model->get_top_tags_with_count( $limit );
+
+        return $tags;
+    }
+
+    public function get_tags_by_post_id ( $id ){
+        $tag_model = new \Models\Tag_Model();
+        $tags = $tag_model->get_tags_by_post_id( $id );
+
+        return $tags;
+    }
+
+    public function list_all_tags(){
+        $tag_model = new \Models\Tag_Model();
+        $tags = $tag_model->find();
+
+        return $tags;
     }
 }

@@ -8,9 +8,12 @@ class Posts_Controller extends Master_Controller {
         parent::__construct( get_class(),
             'post', '/views/posts/' );
 
+        //TODO: MOVE? to where
         include  DX_ROOT_DIR . '/models/category.php';
         include  DX_ROOT_DIR . '/models/tag.php';
-
+        include  DX_ROOT_DIR . '/models/comment.php';
+        include  DX_ROOT_DIR . '/models/user.php';
+        include  DX_ROOT_DIR . '/models/poststags.php';
     }
 
     public function index() {
@@ -36,7 +39,7 @@ class Posts_Controller extends Master_Controller {
 
         $all_categories = $this->model->posts_count()[0];
         $categories_list = $this->model->get_categories_count();
-        $tags_list = $this->model->list_all_tags();
+        $tags_list = $this->model->get_top_tags_with_count( 5 );
         $dates_list = $this->model->get_posts_by_dates();
 
         $template_name = DX_ROOT_DIR . $this->views_dir . (__FUNCTION__). '.php';

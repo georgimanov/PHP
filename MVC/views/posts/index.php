@@ -1,7 +1,7 @@
 
 <?php
-    include_once "aside.php";
-    include_once "section.php";
+    include_once "filter.php";
+    include_once "posts.php";
 ?>
 
 

@@ -10,7 +10,13 @@ if($user['username'] === 'georgi'){
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-                <p><img src="<?php echo DX_URL;?>/views/assets/img/<?php echo $picture;?>" alt="Profile pictyre" width="50px" height="50px"> <ba><?php echo $user['username']; ?></ba></p>
+
+<!--                //TODO: post['user_id'];-->
+<!--                //TODO: $user['username'] => post['username'];-->
+                <p>
+                    <img src="<?php echo DX_URL;?>/views/assets/img/<?php echo $picture;?>" alt="Profile pictyre" width="50px" height="50px"> <ba
+                        ><?php echo $user['username']; ?></ba>
+                </p>
                 <p><bd><?php echo date("d-F-Y",strtotime($post['date_pubslished'])); ?></bd></p>
                 <h4><?php echo $post['title']; ?></h4>
                 <!--                                    <p><img class="img-responsive" src="assets/img/blog01.jpg" alt=""></p>-->
@@ -19,7 +25,8 @@ if($user['username'] === 'georgi'){
                 <p>
                     <bt>TAGS:
                         <?php foreach($tags as $tag): ?>
-                            <a href="<?php echo DX_URL . "posts/index?tag=" . strtolower($tag['name']);?>"><?php echo $tag['name']; ?></a>
+                            <a href="<?php echo DX_URL . "posts/index?tag=" . strtoupper($tag['name']);?>">
+                                <?php echo $tag['name']; ?></a>
                         <?php endforeach; ?>
                     </bt>
                 </p>
@@ -38,8 +45,20 @@ if($user['username'] === 'georgi'){
                 <?php foreach($comments as $comment): ?>
                     <p><img src="<?php echo DX_URL;?>/views/assets/img/<?php echo $picture;?>" alt="Profile pictyre" width="50px" height="50px"> <ba><?php echo $comment['name']; ?></ba></p>
                     <p><?php echo $comment['content']; ?></p>
-                    <p>Date: <bd><?php echo date("d-F-Y",strtotime($comment['date_published'])); ?></bd>
-                        <?php printf("Email: <a href='#' >%s</a>" , $comment['email'] == "" ? "none" : $comment['email']); ?>
+                    <p>
+                        <bt>
+                            Date:
+                            <bd>
+                                <?php echo date("d-F-Y",strtotime($comment['date_published'])); ?>
+                            </bd>
+                        </bt>
+                        <bt>
+                            <?php
+                            if ( ! empty ( $comment['email'] ) ) {
+                                printf("Email: <a href='mailto:%s' target='_top' >%s</a>", $comment['email'], $comment['email']);
+                            };
+                            ?>
+                        </bt>
                     </p>
                     <hr>
                 <?php endforeach; ?>
