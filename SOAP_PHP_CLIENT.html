@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="bg-BG">
+<head>
+	<meta charset="UTF-8">
+</head>
+<body>
+<?php
+$client = new SoapClient(null, array('location' => "http://192.168.42.40:8079/soapServer.php",
+                                     'uri'      => "http://192.168.42.40:8079/soapServer.php"));
+$parameters = new stdClass;
+$parameters->nomer = 3;
+$student = $client->checkStudent($parameters);
+
+echo "Име: ".$student['fname']."<br/>";
+echo "Бащино: ".$student['mname']."<br/>";
+echo "Фамилия: ".$student['lname']."<br/>";
+?>
+</body>
+</html>
+
